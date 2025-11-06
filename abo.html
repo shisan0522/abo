@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ 只是一个ABO属性测算 ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 50%, #FFD4E5 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(255, 182, 193, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: #FF69B4;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #FF85C0;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #FF69B4;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #FFB6C1;
+            border-radius: 15px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            border-color: #FF69B4;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #FF69B4, #FF85C0);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #FFF0F5, #FFE4E9);
+            border-radius: 20px;
+            border: 2px solid #FFB6C1;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: #FF69B4;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #FFB6C1;
+            padding-bottom: 10px;
+        }
+
+        .result-item {
+            margin: 12px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .result-label {
+            color: #FF69B4;
+            font-weight: bold;
+            min-width: 100px;
+            font-size: 14px;
+        }
+
+        .result-value {
+            color: #FF85C0;
+            font-size: 15px;
+            flex: 1;
+        }
+
+        .abo-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .alpha {
+            background: linear-gradient(135deg, #FF69B4, #FF85C0);
+            color: white;
+        }
+
+        .beta {
+            background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+            color: white;
+        }
+
+        .omega {
+            background: linear-gradient(135deg, #FFC0CB, #FFD4E5);
+            color: #FF69B4;
+        }
+
+        .lucky-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF1493;
+        }
+
+        .color-preview {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 10px;
+            vertical-align: middle;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .result-label {
+                min-width: 80px;
+                font-size: 13px;
+            }
+
+            .result-value {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ ABO属性测算 ✨</h1>
+        <p class="subtitle">探索你的专属ABO世界</p >
+        
+        <div class="input-group">
+            <label for="name">请输入你的名字：</label>
+            <input type="text" id="name" placeholder="在这里输入你的名字~">
+        </div>
+
+        <button class="btn" onclick="generateABO()">🌸 开始测算 🌸</button>
+
+        <div id="result" class="result">
+            <div class="result-title">📋 你的ABO属性报告</div>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // 数据配置
+        const CONFIG = {
+            aboTypes: ['Alpha', 'Beta', 'Omega'],
+            genders: ['男性', '女性'],
+            pheromones: [
+                '白玫瑰', '薰衣草', '茉莉花', '檀香木', '雪松', '柑橘', '香草',
+                '海洋', '青草', '松木', '麝香', '龙涎香', '琥珀', '佛手柑',
+                '柠檬', '薄荷', '迷迭香', '桂花', '栀子花', '百合', '樱花',
+                '桃花', '梅花', '兰花', '牡丹', '荷花', '茶香', '竹香',
+                '雨后泥土', '书香', '咖啡', '奶香', '蜂蜜', '焦糖', '巧克力',
+                '皮革', '烟草', '红酒', '冷杉', '雪松果', '沉香', '檀木',
+                '苔藓', '矿石', '冰雪', '月光', '星辰', '晨露'
+            ],
+            bodyTypes: ['健壮', '匀称', '纤细', '瘦弱', '魁梧'],
+            eyeColors: [
+                '琥珀色', '碧蓝色', '翡翠绿', '深褐色', '浅褐色', 
+                '灰色', '淡金色', '蜂蜜色', '墨黑色', '冰蓝色',
+                '橄榄绿', '栗色', '深灰色', '浅绿色', '榛子色'
+            ],
+            hairColors: [
+                '乌黑', '深褐', '浅褐', '金色', '亚麻色',
+                '栗色', '酒红色', '银白', '深灰', '浅金',
+                '蜜糖色', '巧克力色', '黑褐色', '浅棕色'
+            ],
+            flowers: [
+                '玫瑰', '百合', '向日葵', '樱花', '郁金香',
+                '康乃馨', '薰衣草', '茉莉', '栀子花', '桂花',
+                '兰花', '牡丹', '荷花', '菊花', '梅花',
+                '桃花', '梨花', '紫罗兰', '勿忘我', '满天星'
+            ],
+            luckyColors: [
+                { name: '粉红色', hex: '#FFB6C1' },
+                { name: '珊瑚粉', hex: '#FF6B9D' },
+                { name: '桃红色', hex: '#FF69B4' },
+                { name: '天蓝色', hex: '#87CEEB' },
+                { name: '薄荷绿', hex: '#98FF98' },
+                { name: '柠檬黄', hex: '#FFF68F' },
+                { name: '杏色', hex: '#FFD8BE' },
+                { name: '淡绿色', hex: '#C1FFC1' },
+                { name: '香槟金', hex: '#F7E7CE' },
+                { name: '银白色', hex: '#E8E8E8' }
+            ]
+        };
+
+        // 随机生成器类
+        class RandomGenerator {
+            static getHash(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return Math.abs(hash);
+            }
+
+            static seededRandom(seed, min, max) {
+                const x = Math.sin(seed++) * 10000;
+                const random = x - Math.floor(x);
+                return Math.floor(random * (max - min + 1)) + min;
+            }
+
+            static pickFromArray(arr, seed) {
+                const index = this.seededRandom(seed, 0, arr.length - 1);
+                return arr[index];
+            }
+        }
+
+        // ABO生成器类
+        class ABOGenerator {
+            constructor(name) {
+                this.name = name;
+                this.seed = RandomGenerator.getHash(name + new Date().toDateString());
+            }
+
+            generate() {
+                const seeds = this.generateSeeds();
+                
+                return {
+                    name: this.name,
+                    aboType: this.getABOType(seeds.abo),
+                    gender: RandomGenerator.pickFromArray(CONFIG.genders, seeds.gender),
+                    pheromone: RandomGenerator.pickFromArray(CONFIG.pheromones, seeds.pheromone),
+                    height: RandomGenerator.seededRandom(seeds.height, 150, 199),
+                    bodyType: RandomGenerator.pickFromArray(CONFIG.bodyTypes, seeds.body),
+                    eyeColor: RandomGenerator.pickFromArray(CONFIG.eyeColors, seeds.eye),
+                    hairColor: RandomGenerator.pickFromArray(CONFIG.hairColors, seeds.hair),
+                    luckyValue: RandomGenerator.seededRandom(seeds.lucky, 1, 100),
+                    luckyColor: RandomGenerator.pickFromArray(CONFIG.luckyColors, seeds.color),
+                    flower: RandomGenerator.pickFromArray(CONFIG.flowers, seeds.flower)
+                };
+            }
+
+            generateSeeds() {
+                return {
+                    abo: this.seed,
+                    gender: this.seed * 2,
+                    pheromone: this.seed * 3,
+                    height: this.seed * 4,
+                    body: this.seed * 5,
+                    eye: this.seed * 6,
+                    hair: this.seed * 7,
+                    lucky: this.seed * 8,
+                    color: this.seed * 9,
+                    flower: this.seed * 10
+                };
+            }
+
+            getABOType(seed) {
+                return RandomGenerator.pickFromArray(CONFIG.aboTypes, seed);
+            }
+        }
+
+        // UI控制器
+        class UIController {
+            static displayResult(data) {
+                const resultDiv = document.getElementById('result');
+                const contentDiv = document.getElementById('resultContent');
+                
+                contentDiv.innerHTML = `
+                    <div class="result-item">
+                        <span class="result-label">👤 姓名：</span>
+                        <span class="result-value">${data.name}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">🌟 ABO类型：</span>
+                        <span class="result-value">
+                            <span class="abo-badge ${data.aboType.toLowerCase()}">${data.aboType}</span>
+                        </span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">⚧ 性别：</span>
+                        <span class="result-value">${data.gender}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">🌸 信息素：</span>
+                        <span class="result-value">${data.pheromone}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">📏 身高：</span>
+                        <span class="result-value">${data.height} cm</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">💪 体格：</span>
+                        <span class="result-value">${data.bodyType}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">👁 瞳色：</span>
+                        <span class="result-value">${data.eyeColor}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">💇 发色：</span>
+                        <span class="result-value">${data.hairColor}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">🍀 今日幸运值：</span>
+                        <span class="result-value">
+                            <span class="lucky-value">${data.luckyValue}%</span>
+                        </span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">🎨 幸运色：</span>
+                        <span class="result-value">
+                            ${data.luckyColor.name}
+                            <span class="color-preview" style="background-color: ${data.luckyColor.hex}"></span>
+                        </span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">🌺 代表花：</span>
+                        <span class="result-value">${data.flower}</span>
+                    </div>
+                `;
+                
+                resultDiv.classList.add('show');
+            }
+
+            static showError(message) {
+                alert(message);
+            }
+        }
+
+        // 主函数
+        function generateABO() {
+            const nameInput = document.getElementById('name');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                UIController.showError('请输入你的名字哦~ 💕');
+                return;
+            }
+
+            const generator = new ABOGenerator(name);
+            const result = generator.generate();
+            UIController.displayResult(result);
+        }
+
+        // 回车键触发
+        document.getElementById('name').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateABO();
+            }
+        });
+    </script>
+</body>
+</html>
